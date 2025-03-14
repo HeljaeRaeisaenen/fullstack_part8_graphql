@@ -8,7 +8,6 @@ require("dotenv").config();
 const GraphQL = require("graphql");
 const Book = require("./models/book");
 const Author = require("./models/author");
-const author = require("./models/author");
 
 const typeDefs = `
   type Book {
@@ -69,10 +68,8 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args) => {
       let author = await Author.findOne({ name: args.author });
-      console.log(author);
       if (author == null) {
         author = new Author({ name: args.author });
-        console.log(author, args.author);
         try {
           await author.save();
         } catch (error) {
@@ -85,7 +82,6 @@ const resolvers = {
           });
         }
       }
-      console.log(author);
 
       const book = new Book({ ...args, author: author._id });
 
