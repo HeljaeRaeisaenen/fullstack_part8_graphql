@@ -2,97 +2,19 @@ const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v1: uuid } = require("uuid");
 const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
 require("dotenv").config();
 
-let authors = [
-  {
-    name: "Robert Martin",
-    id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
-    born: 1952,
-  },
-  {
-    name: "Martin Fowler",
-    id: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
-    born: 1963,
-  },
-  {
-    name: "Fyodor Dostoevsky",
-    id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
-    born: 1821,
-  },
-  {
-    name: "Joshua Kerievsky", // birthyear not known
-    id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
-  },
-  {
-    name: "Sandi Metz", // birthyear not known
-    id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
-  },
-];
-
-/*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- */
-
-let books = [
-  {
-    title: "Clean Code",
-    published: 2008,
-    author: "Robert Martin",
-    id: "afa5b6f4-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring"],
-  },
-  {
-    title: "Agile software development",
-    published: 2002,
-    author: "Robert Martin",
-    id: "afa5b6f5-344d-11e9-a414-719c6709cf3e",
-    genres: ["agile", "patterns", "design"],
-  },
-  {
-    title: "Refactoring, edition 2",
-    published: 2018,
-    author: "Martin Fowler",
-    id: "afa5de00-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring"],
-  },
-  {
-    title: "Refactoring to patterns",
-    published: 2008,
-    author: "Joshua Kerievsky",
-    id: "afa5de01-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring", "patterns"],
-  },
-  {
-    title: "Practical Object-Oriented Design, An Agile Primer Using Ruby",
-    published: 2012,
-    author: "Sandi Metz",
-    id: "afa5de02-344d-11e9-a414-719c6709cf3e",
-    genres: ["refactoring", "design"],
-  },
-  {
-    title: "Crime and punishment",
-    published: 1866,
-    author: "Fyodor Dostoevsky",
-    id: "afa5de03-344d-11e9-a414-719c6709cf3e",
-    genres: ["classic", "crime"],
-  },
-  {
-    title: "Demons",
-    published: 1872,
-    author: "Fyodor Dostoevsky",
-    id: "afa5de04-344d-11e9-a414-719c6709cf3e",
-    genres: ["classic", "revolution"],
-  },
-];
+const GraphQL = require("graphql");
+const Book = require("./models/book");
+const Author = require("./models/author");
+const author = require("./models/author");
 
 const typeDefs = `
   type Book {
     title: String!
-    author: String!
-    published: Int  !
+    author: Author!
+    published: Int!
     genres: [String]
     id: ID!
   }
@@ -108,7 +30,7 @@ const typeDefs = `
     bookCount: Int
     authorCount: Int
     allBooks(author: String, genre: String): [Book]!
-    allAuthors: [Author!]
+    allAuthors: [Author]!
   }
   
   type Mutation {
@@ -127,55 +49,90 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      let filtered_books = [...books];
+    bookCount: async () => Book.collection.countDocuments(),
+    authorCount: async () => Author.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      let filter = {};
       if (args.author) {
-        filtered_books = filtered_books.filter((b) => b.author == args.author);
+        let author = await Author.findOne({ name: args.author });
+        filter = { ...filter, author: author._id };
       }
       if (args.genre) {
-        filtered_books = filtered_books.filter((b) =>
-          b.genres.includes(args.genre)
-        );
+        filter = { ...filter, genres: { $elemMatch: { $eq: args.genre } } };
       }
 
-      return filtered_books;
+      return Book.find(filter).populate("author");
     },
-    allAuthors: () => authors,
+    allAuthors: async () => Author.find({}),
   },
 
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() };
-      books = books.concat(book);
-      if (!authors.map((a) => a.name).includes(book.author)) {
-        const author = { name: book.author, id: uuid() };
-        authors = authors.concat(author);
+    addBook: async (root, args) => {
+      let author = await Author.findOne({ name: args.author });
+      console.log(author);
+      if (author == null) {
+        author = new Author({ name: args.author });
+        console.log(author, args.author);
+        try {
+          await author.save();
+        } catch (error) {
+          throw new GraphQL.GraphQLError("Saving author failed", {
+            extensions: {
+              code: "AUTOMATIC_AUTHOR_SAVE_FAILED",
+              invalidArgs: author.name,
+              error,
+            },
+          });
+        }
+      }
+      console.log(author);
+
+      const book = new Book({ ...args, author: author._id });
+
+      try {
+        await book.save();
+      } catch (error) {
+        throw new GraphQL.GraphQLError("Saving book failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: book.title,
+            error,
+          },
+        });
       }
       return book;
     },
-    editAuthor: (root, args) => {
-      let author = authors.find((a) => a.name == args.name);
-      if (typeof author !== "undefined") {
-        author = { ...author, born: args.setBornTo };
+    editAuthor: async (root, args) => {
+      let author = await Author.findOne({ name: args.name });
 
-        authors.forEach((a, i) => {
-          if (a.name == author.name) authors[i] = author;
+      author.born = args.setBornTo;
+
+      try {
+        await author.save();
+      } catch (error) {
+        throw new GraphQL.GraphQLError("Saving author failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.setBornTo,
+            error,
+          },
         });
-        return author;
       }
+      return author;
     },
   },
 
   Author: {
-    booksN: (root) => {
-      return books.filter((b) => b.author == root.name).length;
+    booksN: async (root) => {
+      return Book.collection.countDocuments({ author: root._id });
     },
   },
 };
 
-/* https://dev.to/onlyoneerin/how-to-build-a-graphql-api-with-nodejs-apollo-server-and-mongodb-atlas-12fm */
+/*
+With help from 'The ERIN' at
+https://dev.to/onlyoneerin/how-to-build-a-graphql-api-with-nodejs-apollo-server-and-mongodb-atlas-12fm
+*/
 
 const MONGODB = process.env.MONGODB_URI;
 
@@ -185,7 +142,7 @@ const server = new ApolloServer({
 });
 
 mongoose
-  .connect(MONGODB, { useNewUrlParser: true })
+  .connect(MONGODB)
   .then(() => {
     console.log("Connected to MongoDB");
     return startStandaloneServer(server, {
