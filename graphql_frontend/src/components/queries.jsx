@@ -36,3 +36,33 @@ export const NEWBOOK = gql`
   }
 }
 `
+
+export const UPDATEAUTHOR = gql`
+  mutation Mutation($name: String!, $born: Int!) {
+  editAuthor(
+    name: $name,
+    setBornTo: $born
+  ) {
+    name
+    born
+  }
+}
+`
+export const LOGIN = gql`
+  mutation Mutation($username: String!, $password: String!) {
+  login(
+    username: $username,
+    password: $password
+  ) {
+    value
+  }
+}
+`
+export const ME = gql`
+  query Query {
+  me {
+    username
+    favoriteGenre
+  }
+}
+`
