@@ -1,6 +1,8 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v1: uuid } = require("uuid");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 let authors = [
   {
@@ -173,13 +175,23 @@ const resolvers = {
   },
 };
 
+/* https://dev.to/onlyoneerin/how-to-build-a-graphql-api-with-nodejs-apollo-server-and-mongodb-atlas-12fm */
+
+const MONGODB = process.env.MONGODB_URI;
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+mongoose
+  .connect(MONGODB, { useNewUrlParser: true })
+  .then(() => {
+    console.log("Connected to MongoDB");
+    return startStandaloneServer(server, {
+      listen: { port: 4000 },
+    });
+  })
+  .then((res) => {
+    console.log(`Server ready at ${res.url}`);
+  });
