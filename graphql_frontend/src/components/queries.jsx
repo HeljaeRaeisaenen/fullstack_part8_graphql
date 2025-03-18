@@ -48,21 +48,3 @@ export const UPDATEAUTHOR = gql`
   }
 }
 `
-export const LOGIN = gql`
-  mutation Mutation($username: String!, $password: String!) {
-  login(
-    username: $username,
-    password: $password
-  ) {
-    value
-  }
-}
-`
-export const ME = gql`
-  query Query {
-  me {
-    username
-    favoriteGenre
-  }
-}
-`
