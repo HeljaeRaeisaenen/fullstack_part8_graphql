@@ -47,7 +47,7 @@ const typeDefs = `
   type Mutation {
     createUser(
       username: String!
-      favoriteGenre: String!
+      favoriteGenre: String
     ): User
     login(
       username: String!
