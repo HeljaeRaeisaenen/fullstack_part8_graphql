@@ -33,7 +33,11 @@ export const NEWBOOK = gql`
     published: $published,
     genres: $genres
   ) {
-    author
+    author {
+      name
+      born
+      booksN
+    }
     genres
     published
     title

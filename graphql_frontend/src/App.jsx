@@ -30,9 +30,17 @@ const App = () => {
     return (
       <div>
         <Notify errorMessage={errorMessage} />
-        <h2>Login</h2>
+        <div>
+          <button onClick={() => setPage("authors")}>authors</button>
+          <button onClick={() => setPage("books")}>books</button>
+          <button onClick={() => setPage("login")}>login</button>
+        </div>
+        <Authors show={page === "authors"} />
+        <Books show={page === "books"} />
         <LoginForm
+          show={page === "login"}
           setToken={setToken}
+          setPage={setPage}
           setError={notify}
         />
       </div>

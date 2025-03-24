@@ -10,11 +10,18 @@ const NewBook = (props) => {
   const [genres, setGenres] = useState([])
   const [ createBook ] = useMutation(NEWBOOK, {
     update: (cache, response) => {
-      cache.updateQuery({ query: [ALLAUTHORS, ALLBOOKS] }, ({ allAuthors, allBooks }) => {
-        console.log(response.data)
+      cache.updateQuery({ query: ALLBOOKS }, ({ allBooks }) => {
         return {
-          allAuthors: allAuthors.concat(response.data.xxx),
           allBooks: allBooks.concat(response.data.addBook),
+        }
+      })
+      cache.updateQuery( {query: ALLAUTHORS }, ({ allAuthors }) => {
+        const a_name = response.data.addBook.author.name
+        if (allAuthors.map((a) => a.name).includes(a_name)) {
+          return { allAuthors: allAuthors.map( (a) => a.name == a_name ? {...a, booksN: a.booksN+1} : a ) }
+        } 
+        return {
+          allAuthors: allAuthors.concat(response.data.addBook.author),
         }
       })
     }
