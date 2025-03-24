@@ -131,7 +131,7 @@ const resolvers = {
           },
         });
       }
-      return book;
+      return book.populate("author");
     },
     editAuthor: async (root, args, { currentUser }) => {
       let author = await Author.findOne({ name: args.name });
