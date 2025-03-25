@@ -21,6 +21,8 @@ const Books = (props) => {
     <div>
       <h2>books</h2>
 
+      {!(genre.trim().length === 0) ? (<p>books in genre <b>{genre}</b></p>) : <></>}
+
       <table>
         <tbody>
           <tr>

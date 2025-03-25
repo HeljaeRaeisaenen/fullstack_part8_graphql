@@ -6,6 +6,7 @@ import NewBook from "./components/NewBook";
 import EditAuthor from "./components/EditAuthor";
 import LoginForm from "./components/LoginForm";
 import Notify from "./components/Notify";
+import Recommend from "./components/Recommend";
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -17,6 +18,7 @@ const App = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+    setPage("login")
   }
 
   const notify = (message) => {
@@ -55,6 +57,7 @@ const App = () => {
         <button onClick={() => setPage("books")}>books</button>
         <button onClick={() => setPage("add")}>add book</button>
         <button onClick={() => setPage("edit")}>edit author</button>
+        <button onClick={() => setPage("recommend")}>recommend</button>
         <button onClick={logout}>logout</button>
       </div>
 
@@ -62,6 +65,7 @@ const App = () => {
       <Books show={page === "books"} />
       <NewBook show={page === "add"} />
       <EditAuthor show={page === "edit"} />
+      <Recommend show={page === "recommend"} />
     </div>
   );
 };
