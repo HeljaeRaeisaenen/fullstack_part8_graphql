@@ -35,7 +35,6 @@ const NewBook = (props) => {
     event.preventDefault()
 
     console.log('add book...')
-    //const published_real = parseInt(published)
     const published_real = published.length > 0 ? parseInt(published) : undefined;
 
     createBook({
