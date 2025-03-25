@@ -23,7 +23,7 @@ const LoginForm = ({ setError, setToken, setPage, show }) => {
       localStorage.setItem('library-user-token', token)
       setPage("authors")
     }
-  }, [result.data])
+  }, [result.data, setPage, setToken])
 
   if (!show) {
     return null

@@ -3,8 +3,8 @@ import { ME, ALLBOOKS } from './queries'
 
 const Recommend = (props) => {
   const result = useQuery(ME, {
-		// don't cache this query because logging out cases it to be cached
-		// as null for some reason??? until the page is refreshed
+		// don't cache this query because logging out causes its result to be cached
+		// as null for some reason until the page is refreshed
 		fetchPolicy: "no-cache"
 	})
 	const books_result = useQuery(ALLBOOKS, {
