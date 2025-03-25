@@ -55,6 +55,9 @@ const typeDefs = `
       favoriteGenre: String!
     ): User
   }
+	type Subscription {
+  	bookAdded: Book!
+	}    
 `;
 
 module.exports = typeDefs;

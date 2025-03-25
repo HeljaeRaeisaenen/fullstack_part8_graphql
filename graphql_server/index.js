@@ -1,5 +1,5 @@
 const { WebSocketServer } = require("ws");
-const { useServer } = require("graphql-ws/lib/use/ws");
+const { useServer } = require("graphql-ws/use/ws");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const {
@@ -56,7 +56,9 @@ const start = async () => {
       },
     ],
   });
+
   await server.start();
+
   app.use(
     "/",
     cors(),
