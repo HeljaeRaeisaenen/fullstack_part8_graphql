@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useSubscription } from '@apollo/client';
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
@@ -7,6 +7,23 @@ import EditAuthor from "./components/EditAuthor";
 import LoginForm from "./components/LoginForm";
 import Notify from "./components/Notify";
 import Recommend from "./components/Recommend";
+import { ALLBOOKS, BOOK_ADDED } from "./components/queries";
+
+// function that takes care of manipulating cache
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByTitle = (b) => {
+    let seen = new Set()
+    return b.filter((item) => {
+      let k = item.title
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByTitle(allBooks.concat(addedBook)),
+    }
+  })
+}
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -27,6 +44,16 @@ const App = () => {
       setErrorMessage(null)
     }, 10000)
   }
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log(data)
+      const book = data.data.bookAdded
+      notify(`Added book '${book.title}'`)
+      updateCache(client.cache, { query: ALLBOOKS }, book)
+      }
+  })
+
 
   if (!token) {
     return (
