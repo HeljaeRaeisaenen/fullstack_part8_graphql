@@ -1,0 +1,7 @@
+{
+
+	"scripts": {
+		"start:prod": "cd graphql_server/ && npm run start & cd graphql_frontend/ && npm run preview"
+
+	}
+}

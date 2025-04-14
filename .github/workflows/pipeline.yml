@@ -1,0 +1,23 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: cd graphql_server/ && npm install && cd ../graphql_frontend && npm install && cd ..
+      - name: Check style
+        run: cd graphql_frontend && npm run lint && cd ..
+      - name: Build
+        run: cd graphql_frontend && npm run build && cd ..
+      - name: Unit test
+        run: cd graphql_server/ && npm run test && cd ../graphql_frontend && npm run test && cd ..

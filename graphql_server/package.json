@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --watch index.js"
+    "test": "echo \"Error: no test specified\"",
+    "start": "node --watch index.js",
+    "start:prod": "node index.js"
   },
   "author": "",
   "license": "ISC",
