@@ -10,7 +10,7 @@ const EditAuthor = (props) => {
 
 	if (result.loading)  {
 		return <div>loading...</div>
-	  }
+	}
 
 	if (!props.show) {
 		return null
