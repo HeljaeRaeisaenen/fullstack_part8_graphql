@@ -2,6 +2,8 @@ import React from 'react'
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
+import { expect, it } from "@jest/globals";
+
 import Authors from "../src/components/Authors";
 import { ALLAUTHORS } from '../src/components/queries';
 
