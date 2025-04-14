@@ -1,3 +1,4 @@
+/* eslint react-refresh/only-export-components: "off" */
 import { gql } from '@apollo/client'
 
 const BOOK_DETAILS = gql`

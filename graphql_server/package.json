@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\"",
     "start": "node --watch index.js",
-    "start:prod": "node index.js"
+    "start:prod": "node index.js",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "author": "",
   "license": "ISC",
@@ -22,5 +23,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0"
   }
 }

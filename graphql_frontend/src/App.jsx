@@ -9,6 +9,8 @@ import Notify from "./components/Notify";
 import Recommend from "./components/Recommend";
 import { ALLBOOKS, BOOK_ADDED } from "./components/queries";
 
+/* eslint react-refresh/only-export-components: "off" */
+
 // function that takes care of manipulating cache
 export const updateCache = (cache, query, addedBook) => {
   const uniqByTitle = (b) => {

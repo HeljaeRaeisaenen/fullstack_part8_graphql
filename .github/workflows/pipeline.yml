@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: cd graphql_server/ && npm install && cd ../graphql_frontend && npm install && cd ..
       - name: Check style
-        run: cd graphql_frontend && npm run lint && cd ..
+        run: cd graphql_server/ && npm run lint && cd ../graphql_frontend && npm run lint && cd ..
       - name: Build
         run: cd graphql_frontend && npm run build && cd ..
       - name: Unit test

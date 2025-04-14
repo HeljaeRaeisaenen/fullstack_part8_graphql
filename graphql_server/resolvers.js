@@ -153,7 +153,7 @@ const resolvers = {
         throw new GraphQLError("Saving user failed", {
           extensions: {
             code: "BAD_USER_INPUT",
-            invalidArgs: genre,
+            invalidArgs: args.favoriteGenre,
             error,
           },
         });
