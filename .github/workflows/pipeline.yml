@@ -20,4 +20,6 @@ jobs:
       - name: Build
         run: cd graphql_frontend && npm run build && cd ..
       - name: Unit test
+        env: 
+          MONGODB_URI: ${{secrets.MONGODB_URI}}
         run: cd graphql_server/ && npm run test && cd ../graphql_frontend && npm run test && cd ..
