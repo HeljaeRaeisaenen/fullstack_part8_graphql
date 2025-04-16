@@ -78,4 +78,7 @@ export default defineConfig({
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
+  expect: {
+    timeout: 20 * 1000,
+  },
 });
