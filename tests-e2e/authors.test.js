@@ -1,4 +1,3 @@
-// @ts-check
 import { test, describe, expect, beforeEach } from "@playwright/test";
 
 describe("Library app", () => {

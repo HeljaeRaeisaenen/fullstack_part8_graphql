@@ -1,6 +1,6 @@
 {
 	"scripts": {
-    "start:prod": "cd graphql_server/ && npm run start & cd graphql_frontend/ && npm run preview",
+    "start:prod": "cd graphql_server/ && npm run start:prod & cd graphql_frontend/ && npm run preview",
 		"test-e2e": "playwright test",
     "test-e2e:report": "playwright show-report"
 	},

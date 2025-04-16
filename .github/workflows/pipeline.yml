@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install dependencies
-        run: cd graphql_server/ && npm install && cd ../graphql_frontend && npm install && cd ..
+        run: npm install && cd graphql_server/ && npm install && cd ../graphql_frontend && npm install && cd ..
       - name: Check style
         run: cd graphql_server/ && npm run lint && cd ../graphql_frontend && npm run lint && cd ..
       - name: Build
@@ -24,7 +24,7 @@ jobs:
           MONGODB_URI: ${{secrets.MONGODB_URI}}
         run: cd graphql_server/ && npm run test && cd ../graphql_frontend && npm run test && cd ..
       - name: Install Playwright Browsers
-        run: npm install && npx playwright install --with-deps
+        run:  npx playwright install --with-deps
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
