@@ -23,3 +23,13 @@ jobs:
         env: 
           MONGODB_URI: ${{secrets.MONGODB_URI}}
         run: cd graphql_server/ && npm run test && cd ../graphql_frontend && npm run test && cd ..
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
