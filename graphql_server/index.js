@@ -61,7 +61,12 @@ const start = async () => {
 
   app.use(
     "/",
-    cors({ origin: "https://fullstack-part8-graphql-1.onrender.com/" }),
+    cors({
+      origin: [
+        "https://localhost",
+        "https://fullstack-part8-graphql-1.onrender.com/",
+      ],
+    }),
     express.json(),
     expressMiddleware(server, {
       context: async ({ req }) => {
