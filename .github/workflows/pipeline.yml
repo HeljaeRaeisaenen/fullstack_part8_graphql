@@ -42,4 +42,4 @@ jobs:
           ID_FRONT: ${{secrets.RENDER_SERVICE_ID_FRONT}}
           API_BACK: ${{secrets.RENDER_API_KEY_BACK}}
           API_FRONT: ${{secrets.RENDER_API_KEY_FRONT}}
-        run: curl https://api.render.com/deploy/srv-${{ ID_FRONT }}?key=${{ API_FRONT }} && curl https://api.render.com/deploy/srv-${{ ID_BACK }}?key=${{ API_BACK }}
+        run: curl https://api.render.com/deploy/srv-${{ env.ID_FRONT }}?key=${{ env.API_FRONT }} && curl https://api.render.com/deploy/srv-${{ env.ID_BACK }}?key=${{ env.API_BACK }}
