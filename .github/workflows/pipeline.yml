@@ -3,6 +3,7 @@ name: Deployment pipeline
 on:
   push:
     branches: [main]
+    types: [opened, synchronize]
 
 
 jobs:
@@ -43,3 +44,15 @@ jobs:
           API_BACK: ${{secrets.RENDER_API_KEY_BACK}}
           API_FRONT: ${{secrets.RENDER_API_KEY_FRONT}}
         run: curl https://api.render.com/deploy/srv-${{ env.ID_FRONT }}?key=${{ env.API_FRONT }} && curl https://api.render.com/deploy/srv-${{ env.ID_BACK }}?key=${{ env.API_BACK }}
+  tag_release:
+    needs: [deployment_pipeline]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_MESSAGES: ${{ join(github.event.commits.*.message, '') }}
+          DEFAULT_BUMP: patch
+        if: ${{ github.event_name == 'push' && !contains(env.COMMIT_MESSAGES, '#skip') }}
+        uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
