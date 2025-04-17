@@ -3,6 +3,7 @@ name: Deployment pipeline
 on:
   push:
     branches: [main]
+    types: [opened, synchronize]
 
 
 jobs:
