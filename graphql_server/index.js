@@ -63,8 +63,11 @@ const start = async () => {
     "/",
     cors({
       origin: [
-        "https://localhost",
-        "https://fullstack-part8-graphql-1.onrender.com/",
+        "https://localhost:4173",
+        "http://localhost:4173",
+        "https://fullstack-part8-graphql-1.onrender.com",
+        "http://fullstack-part8-graphql-1.onrender.com",
+        "https://studio.apollographql.com",
       ],
     }),
     express.json(),
