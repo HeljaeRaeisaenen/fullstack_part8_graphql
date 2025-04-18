@@ -2,7 +2,7 @@ name: Periodic health check
 
 on:
   schedule:
-    - cron: '0 11 * 4 5' #min hour dm m dw
+    - cron: '0 18 * 4 5' #min hour dm m dw
 
 jobs:
   health_check:
