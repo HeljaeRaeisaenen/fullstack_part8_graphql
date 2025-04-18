@@ -19,11 +19,11 @@ const authLink = setContext((_, { headers }) => {
 })
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000',
+  uri: import.meta.env.VITE_URI
 })
 
 const wsLink = new GraphQLWsLink(createClient({
-  url: 'ws://localhost:4000',
+  url: import.meta.env.VITE_URL
 }))
 
 const splitLink = split(

@@ -65,6 +65,8 @@ const start = async () => {
       origin: [
         "https://localhost:4173",
         "http://localhost:4173",
+        "https://localhost:5173",
+        "http://localhost:5173",
         "https://fullstack-part8-graphql-1.onrender.com",
         "http://fullstack-part8-graphql-1.onrender.com",
         "https://studio.apollographql.com",
