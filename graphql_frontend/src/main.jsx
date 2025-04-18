@@ -22,6 +22,9 @@ const httpLink = createHttpLink({
   uri: import.meta.env.VITE_URI
 })
 
+console.log(import.meta.env.VITE_URI)
+console.log(import.meta.env.VITE_URL)
+
 const wsLink = new GraphQLWsLink(createClient({
   url: import.meta.env.VITE_URL
 }))
