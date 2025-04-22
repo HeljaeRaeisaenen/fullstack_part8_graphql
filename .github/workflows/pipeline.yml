@@ -7,10 +7,12 @@ on:
     branches: [main]
     types: [opened, synchronize]
 
-
 jobs:
   deployment_pipeline:
     runs-on: ubuntu-22.04
+    env:
+      VITE_URI: ${{vars.VITE_URI}}
+      VITE_URL: ${{vars.VITE_URL}}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
